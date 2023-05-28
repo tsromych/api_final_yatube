@@ -29,10 +29,13 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class FollowSerializer(serializers.ModelSerializer):
-    user = SlugRelatedField(slug_field='username', queryset=User.objects.all(),
-                            default=serializers.CurrentUserDefault())
-    following = SlugRelatedField(slug_field='username',
-                                 queryset=User.objects.all())
+    user = SlugRelatedField(
+        slug_field='username',
+        queryset=User.objects.all(),
+        default=serializers.CurrentUserDefault())
+    following = SlugRelatedField(
+        slug_field='username',
+        queryset=User.objects.all())
 
     class Meta:
         fields = ('__all__')
@@ -45,8 +48,8 @@ class FollowSerializer(serializers.ModelSerializer):
             )
         ]
 
-    def validate(self, data):
-        if self.context['request'].user == data['following']:
+    def validate_following(self, data):
+        if self.context['request'].user == data:
             raise serializers.ValidationError(
                 'Вы не можете подписаться на самого себя!'
             )
